@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cotizador QuickBox</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <h1>Cotizador QuickBox</h1>
+          <p>Pesos en gramos. El total se cotiza con arancel 88.</p>
+        </div>
+        <button id="add-row" class="button secondary" type="button">Agregar fila</button>
+      </header>
+
+      <section class="table-wrap" aria-label="Productos">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Precio USD</th>
+              <th>Peso (g)</th>
+              <th>Cantidad</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="items-body"></tbody>
+        </table>
+      </section>
+
+      <section class="summary" aria-label="Resumen">
+        <div>
+          <span>Total USD compra</span>
+          <strong id="total-usd">US$ 0.00</strong>
+        </div>
+        <div>
+          <span>Total gramos</span>
+          <strong id="total-grams">0 g</strong>
+        </div>
+        <div>
+          <span>Libras a cotizar</span>
+          <strong id="total-pounds">1 lb</strong>
+        </div>
+        <button id="quote" class="button primary" type="button">Cotizar</button>
+      </section>
+
+      <section id="result" class="result" hidden>
+        <div>
+          <span>Productos USD</span>
+          <strong id="products-result">-</strong>
+        </div>
+        <div>
+          <span>Envio QuickBox USD</span>
+          <strong id="shipping-result">-</strong>
+        </div>
+        <div>
+          <span>Precio total</span>
+          <strong id="final-result">-</strong>
+        </div>
+      </section>
+
+      <p id="status" class="status" role="status"></p>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
