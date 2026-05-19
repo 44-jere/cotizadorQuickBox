@@ -3,7 +3,7 @@ const fs = require('fs/promises');
 const path = require('path');
 const { quoteQuickbox } = require('./fetch-quickbox-price');
 
-const PORT = Number(process.env.PORT || 3000);
+const PORT = Number(process.env.PORT || 3008);
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const contentTypes = {
