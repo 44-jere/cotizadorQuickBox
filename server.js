@@ -18,6 +18,22 @@ function sendJson(response, status, payload) {
   response.end(JSON.stringify(payload));
 }
 
+async function fetchTariffs(countryId = '1') {
+  const body = new URLSearchParams({ pais_id: countryId });
+  const apiResponse = await fetch('https://node.qs.gt/lista/aranceles', {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body,
+  });
+  const payload = await apiResponse.json();
+
+  if (!payload.result || !Array.isArray(payload.records)) {
+    throw new Error(payload.message || 'No se pudo cargar la lista de aranceles');
+  }
+
+  return payload.records;
+}
+
 async function serveStatic(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
   const requestedPath = url.pathname === '/' ? '/index.html' : url.pathname;
@@ -46,6 +62,7 @@ const server = http.createServer(async (request, response) => {
   if (url.pathname === '/api/quote') {
     const value = url.searchParams.get('value');
     const weight = url.searchParams.get('weight');
+    const tariff = url.searchParams.get('tariff') || '88';
 
     if (!value || !weight) {
       sendJson(response, 400, { error: 'value and weight are required' });
@@ -53,8 +70,18 @@ const server = http.createServer(async (request, response) => {
     }
 
     try {
-      const quote = await quoteQuickbox({ value, weight, tariff: '88' });
+      const quote = await quoteQuickbox({ value, weight, tariff });
       sendJson(response, 200, quote);
+    } catch (error) {
+      sendJson(response, 500, { error: error.message });
+    }
+    return;
+  }
+
+  if (url.pathname === '/api/tariffs') {
+    try {
+      const tariffs = await fetchTariffs(url.searchParams.get('countryId') || '1');
+      sendJson(response, 200, { records: tariffs });
     } catch (error) {
       sendJson(response, 500, { error: error.message });
     }

@@ -84,6 +84,7 @@ input {
   padding: 0 10px;
   font-size: 15px;
   color: var(--ink);
+  background: var(--white);
 }
 
 input:focus {
@@ -138,7 +139,7 @@ input:focus {
 .summary,
 .result {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   margin-top: 16px;
 }

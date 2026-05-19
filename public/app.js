@@ -6,6 +6,14 @@ const addRowButton = document.querySelector('#add-row');
 const quoteButton = document.querySelector('#quote');
 const statusEl = document.querySelector('#status');
 const resultEl = document.querySelector('#result');
+const tariffInput = document.querySelector('#tariff-input');
+const tariffOptions = document.querySelector('#tariff-options');
+let tariffs = [
+  {
+    arancel_id: '88',
+    texto: 'Maquillaje 15%',
+  },
+];
 
 const totalUsdEl = document.querySelector('#total-usd');
 const totalGramsEl = document.querySelector('#total-grams');
@@ -45,6 +53,47 @@ function escapeAttribute(value) {
     .replace(/"/g, '&quot;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
+}
+
+function setTariffs(tariffs) {
+  const currentText = tariffInput.value || 'Maquillaje 15%';
+  tariffOptions.innerHTML = '';
+
+  for (const tariff of tariffs) {
+    const option = document.createElement('option');
+    option.value = tariff.texto || `${tariff.descripcion || 'Arancel'} ${tariff.porcentaje || ''}%`;
+    option.dataset.id = tariff.arancel_id;
+    tariffOptions.appendChild(option);
+  }
+
+  tariffInput.value = tariffs.some((tariff) => tariff.texto === currentText)
+    ? currentText
+    : 'Maquillaje 15%';
+}
+
+async function loadTariffs() {
+  try {
+    const response = await fetch('/api/tariffs');
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'No se pudo cargar aranceles');
+    }
+
+    tariffs = data.records;
+    setTariffs(tariffs);
+  } catch (error) {
+    statusEl.textContent = error.message;
+  }
+}
+
+function getSelectedTariffId() {
+  const normalizedText = tariffInput.value.trim().toLowerCase();
+  const selectedTariff = tariffs.find((tariff) => (
+    (tariff.texto || '').trim().toLowerCase() === normalizedText
+  ));
+
+  return selectedTariff ? selectedTariff.arancel_id : '88';
 }
 
 function addRow(values = {}) {
@@ -131,13 +180,14 @@ function render() {
 async function quote() {
   const { totalUsd, pounds } = getTotals();
   const value = formatForUrl(totalUsd);
+  const tariff = getSelectedTariffId();
 
   statusEl.textContent = 'Cotizando...';
   quoteButton.disabled = true;
   resultEl.hidden = true;
 
   try {
-    const response = await fetch(`/api/quote?value=${encodeURIComponent(value)}&weight=${encodeURIComponent(pounds)}`);
+    const response = await fetch(`/api/quote?value=${encodeURIComponent(value)}&weight=${encodeURIComponent(pounds)}&tariff=${encodeURIComponent(tariff)}`);
     const data = await response.json();
 
     if (!response.ok) {
@@ -163,3 +213,4 @@ addRowButton.addEventListener('click', () => addRow());
 quoteButton.addEventListener('click', quote);
 
 addRow();
+loadTariffs();

@@ -11,7 +11,7 @@
       <header class="topbar">
         <div>
           <h1>Cotizador QuickBox</h1>
-          <p>Pesos en gramos. El total se cotiza con arancel 88.</p>
+          <p>Pesos en gramos. Elige el arancel antes de cotizar.</p>
         </div>
         <button id="add-row" class="button secondary" type="button">Agregar fila</button>
       </header>
@@ -43,6 +43,11 @@
         <div>
           <span>Libras a cotizar</span>
           <strong id="total-pounds">1 lb</strong>
+        </div>
+        <div>
+          <span>Arancel</span>
+          <input id="tariff-input" list="tariff-options" value="Maquillaje 15%" aria-label="Arancel">
+          <datalist id="tariff-options"></datalist>
         </div>
         <button id="quote" class="button primary" type="button">Cotizar</button>
       </section>
