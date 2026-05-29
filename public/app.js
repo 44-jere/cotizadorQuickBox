@@ -194,7 +194,7 @@ async function quote() {
       throw new Error(data.error || 'No se pudo cotizar');
     }
 
-    const shippingUsd = data.usdTotal.numericPrice;
+    const shippingUsd = data.usdTotal.numericPrice / (GRAMS_PER_POUND * pounds);
     const finalUsd = (totalUsd + shippingUsd) * 1.8;
 
     productsResultEl.textContent = formatMoney(totalUsd);
