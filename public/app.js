@@ -200,7 +200,7 @@ async function quote() {
     const finalUsd = (totalUsd + shippingUsd) * 1.8;
 
     productsResultEl.textContent = formatMoney(totalUsd);
-    shippingResultEl.textContent = data.usdTotal.rawText;
+    shippingResultEl.textContent = formatMoney(shippingUsd);
     finalResultEl.textContent = formatMoney(finalUsd);
     resultEl.hidden = false;
     statusEl.textContent = `URL consultada: ${data.url}`;
