@@ -9,7 +9,7 @@ const discountCodeInput = document.querySelector('#discount-code');
 
 function getMarkupMultiplier() {
   const code = discountCodeInput.value;
-  return DISCOUNT_CODES[code] || 1.9;
+  return DISCOUNT_CODES[code] || 1.8;
 }
 
 const urlCode = new URLSearchParams(window.location.search).get('descuento');
