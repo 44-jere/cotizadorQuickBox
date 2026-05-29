@@ -197,7 +197,7 @@ async function quote() {
     // Costo del envío proporcional a los gramos reales pedidos
     const shippingPerGram = data.usdTotal.numericPrice / (pounds * GRAMS_PER_POUND);
     const shippingUsd = shippingPerGram * totalGrams;
-    const finalUsd = (totalUsd + shippingUsd) * 1.8;
+    const finalUsd = (totalUsd + shippingUsd) * 1.9;
 
     productsResultEl.textContent = formatMoney(totalUsd);
     shippingResultEl.textContent = formatMoney(shippingUsd);
