@@ -1,6 +1,22 @@
 const GRAMS_PER_POUND = 453.59237;
 const rows = [];
 
+const DISCOUNT_CODES = {
+  'cliente vip': 1.65,
+};
+
+const discountCodeInput = document.querySelector('#discount-code');
+
+function getMarkupMultiplier() {
+  const code = discountCodeInput.value;
+  return DISCOUNT_CODES[code] || 1.9;
+}
+
+const urlCode = new URLSearchParams(window.location.search).get('descuento');
+if (urlCode) {
+  discountCodeInput.value = urlCode;
+}
+
 const body = document.querySelector('#items-body');
 const addRowButton = document.querySelector('#add-row');
 const quoteButton = document.querySelector('#quote');
@@ -197,7 +213,7 @@ async function quote() {
     // Costo del envío proporcional a los gramos reales pedidos
     const shippingPerGram = data.usdTotal.numericPrice / (pounds * GRAMS_PER_POUND);
     const shippingUsd = shippingPerGram * totalGrams;
-    const finalUsd = (totalUsd + shippingUsd) * 1.9;
+    const finalUsd = (totalUsd + shippingUsd) * getMarkupMultiplier();
 
     productsResultEl.textContent = formatMoney(totalUsd);
     shippingResultEl.textContent = formatMoney(shippingUsd);
