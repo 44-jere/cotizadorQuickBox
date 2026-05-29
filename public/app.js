@@ -178,7 +178,7 @@ function render() {
 }
 
 async function quote() {
-  const { totalUsd, pounds } = getTotals();
+  const { totalUsd, totalGrams, pounds } = getTotals();
   const value = formatForUrl(totalUsd);
   const tariff = getSelectedTariffId();
 
@@ -194,7 +194,9 @@ async function quote() {
       throw new Error(data.error || 'No se pudo cotizar');
     }
 
-    const shippingUsd = data.usdTotal.numericPrice / (GRAMS_PER_POUND * pounds);
+    // Costo del envío proporcional a los gramos reales pedidos
+    const shippingPerGram = data.usdTotal.numericPrice / (pounds * GRAMS_PER_POUND);
+    const shippingUsd = shippingPerGram * totalGrams;
     const finalUsd = (totalUsd + shippingUsd) * 1.8;
 
     productsResultEl.textContent = formatMoney(totalUsd);
