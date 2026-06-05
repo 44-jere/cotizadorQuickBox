@@ -97,10 +97,11 @@ select {
   height: 40px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  padding: 0 10px;
+  padding: 0 30px 0 10px;
   font-size: 15px;
   color: var(--ink);
-  background: var(--white);
+  background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23607086'/%3E%3C/svg%3E") no-repeat right 10px center;
+  appearance: none;
   cursor: pointer;
 }
 
