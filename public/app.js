@@ -18,7 +18,12 @@ markupSelect.value = 80;
 
 discountCodeInput.addEventListener('input', () => {
   const pct = DISCOUNT_CODES[discountCodeInput.value.trim().toLowerCase()];
-  if (pct) markupSelect.value = pct;
+  if (pct) {
+    markupSelect.value = pct;
+    markupSelect.disabled = true;
+  } else {
+    markupSelect.disabled = false;
+  }
 });
 
 function getMarkupMultiplier() {
@@ -29,7 +34,10 @@ const urlCode = new URLSearchParams(window.location.search).get('descuento');
 if (urlCode) {
   discountCodeInput.value = urlCode;
   const pct = DISCOUNT_CODES[urlCode.trim().toLowerCase()];
-  if (pct) markupSelect.value = pct;
+  if (pct) {
+    markupSelect.value = pct;
+    markupSelect.disabled = true;
+  }
 }
 
 const body = document.querySelector('#items-body');
