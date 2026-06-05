@@ -21,8 +21,10 @@ discountCodeInput.addEventListener('input', () => {
   if (pct) {
     markupSelect.value = pct;
     markupSelect.disabled = true;
+    markupSelect.classList.add('locked');
   } else {
     markupSelect.disabled = false;
+    markupSelect.classList.remove('locked');
   }
 });
 
@@ -37,6 +39,7 @@ if (urlCode) {
   if (pct) {
     markupSelect.value = pct;
     markupSelect.disabled = true;
+    markupSelect.classList.add('locked');
   }
 }
 

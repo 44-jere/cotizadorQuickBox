@@ -109,9 +109,12 @@ select:focus {
   border-color: var(--blue);
 }
 
-select:disabled {
-  opacity: .55;
+select:disabled,
+select.locked {
+  background: var(--panel);
+  color: var(--muted);
   cursor: not-allowed;
+  pointer-events: none;
 }
 
 .number-cell {
