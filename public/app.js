@@ -2,19 +2,34 @@ const GRAMS_PER_POUND = 453.59237;
 const rows = [];
 
 const DISCOUNT_CODES = {
-  'cliente vip': 1.65,
+  'cliente vip': 65,
 };
 
 const discountCodeInput = document.querySelector('#discount-code');
+const markupSelect = document.querySelector('#markup-select');
+
+for (let i = 1; i <= 100; i++) {
+  const option = document.createElement('option');
+  option.value = i;
+  option.textContent = `${i}%`;
+  markupSelect.appendChild(option);
+}
+markupSelect.value = 80;
+
+discountCodeInput.addEventListener('input', () => {
+  const pct = DISCOUNT_CODES[discountCodeInput.value.trim().toLowerCase()];
+  if (pct) markupSelect.value = pct;
+});
 
 function getMarkupMultiplier() {
-  const code = discountCodeInput.value;
-  return DISCOUNT_CODES[code] || 1.8;
+  return 1 + parseInt(markupSelect.value, 10) / 100;
 }
 
 const urlCode = new URLSearchParams(window.location.search).get('descuento');
 if (urlCode) {
   discountCodeInput.value = urlCode;
+  const pct = DISCOUNT_CODES[urlCode.trim().toLowerCase()];
+  if (pct) markupSelect.value = pct;
 }
 
 const body = document.querySelector('#items-body');
@@ -230,5 +245,22 @@ async function quote() {
 addRowButton.addEventListener('click', () => addRow());
 quoteButton.addEventListener('click', quote);
 
+async function loadSettings() {
+  try {
+    const response = await fetch('/api/settings');
+    const data = await response.json();
+    if (data.markup) markupSelect.value = data.markup;
+  } catch {}
+}
+
+markupSelect.addEventListener('change', () => {
+  fetch('/api/settings', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ markup: parseInt(markupSelect.value, 10) }),
+  });
+});
+
 addRow();
 loadTariffs();
+loadSettings();

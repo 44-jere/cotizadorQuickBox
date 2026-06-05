@@ -5,6 +5,20 @@ const { quoteQuickbox } = require('./fetch-quickbox-price');
 
 const PORT = Number(process.env.PORT || 3008);
 const PUBLIC_DIR = path.join(__dirname, 'public');
+const SETTINGS_FILE = path.join(__dirname, 'settings.json');
+
+async function readSettings() {
+  try {
+    const raw = await fs.readFile(SETTINGS_FILE, 'utf8');
+    return JSON.parse(raw);
+  } catch {
+    return { markup: 80 };
+  }
+}
+
+async function writeSettings(data) {
+  await fs.writeFile(SETTINGS_FILE, JSON.stringify(data, null, 2), 'utf8');
+}
 
 const contentTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -72,6 +86,31 @@ const server = http.createServer(async (request, response) => {
     try {
       const quote = await quoteQuickbox({ value, weight, tariff });
       sendJson(response, 200, quote);
+    } catch (error) {
+      sendJson(response, 500, { error: error.message });
+    }
+    return;
+  }
+
+  if (url.pathname === '/api/settings' && request.method === 'GET') {
+    try {
+      const settings = await readSettings();
+      sendJson(response, 200, settings);
+    } catch (error) {
+      sendJson(response, 500, { error: error.message });
+    }
+    return;
+  }
+
+  if (url.pathname === '/api/settings' && request.method === 'POST') {
+    try {
+      const chunks = [];
+      for await (const chunk of request) chunks.push(chunk);
+      const body = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+      const current = await readSettings();
+      const updated = { ...current, ...body };
+      await writeSettings(updated);
+      sendJson(response, 200, updated);
     } catch (error) {
       sendJson(response, 500, { error: error.message });
     }
