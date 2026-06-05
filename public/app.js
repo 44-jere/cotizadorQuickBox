@@ -257,7 +257,7 @@ async function loadSettings() {
   try {
     const response = await fetch('/api/settings');
     const data = await response.json();
-    if (data.markup) markupSelect.value = data.markup;
+    if (data.markup && !markupSelect.disabled) markupSelect.value = data.markup;
   } catch {}
 }
 
